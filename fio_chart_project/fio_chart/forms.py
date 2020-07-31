@@ -1,7 +1,10 @@
 from django import forms
 
-class UploadFioLog(forms.Form):
+class UploadFioLogForm(forms.Form):
     file = forms.FileField()
 
-class AutomateFio(forms.Form):
-    
+class AutomateFioForm(forms.Form):
+	bmc_ip = forms.CharField()
+	lan_mac = forms.CharField()
+	cburn_img = forms.CharField()
+	burnin_dir = forms.CharField()
