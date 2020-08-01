@@ -10,3 +10,7 @@ class AutomateFioForm(forms.Form):
 	lan_mac = forms.CharField()
 	cburn_img = forms.CharField()
 	burnin_dir = forms.CharField()
+
+class SavePerformanceForm(forms.Form):
+	drive_info_file = forms.FileField()
+	fio_log_file = forms.FileField()
