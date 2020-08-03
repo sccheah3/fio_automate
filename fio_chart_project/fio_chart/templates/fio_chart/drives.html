@@ -13,6 +13,8 @@
 {% if drives %}
 <div id="drives-table-div" class="info_table">
 	<h2>Drives</h2>
+	<form action="{% url 'drive_benchmark:performance_comparison' %}" method="POST">
+	{% csrf_token %}
 	<table id="drivesTable" class="table table-striped table-bordered">
 		<thead>
 			<tr>
@@ -41,6 +43,7 @@
 			</tr>
 		</tfoot>
 	</table>
+	</form>
 </div>
 {% else %}
 	<p>No drives are available.</p>

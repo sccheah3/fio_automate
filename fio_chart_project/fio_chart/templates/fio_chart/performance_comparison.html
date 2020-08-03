@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metalink %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+
+{% block title %}Drive Performance Comparison{% endblock %}
+
+{% block content %}
+  <div class="info_table">
+    <h2>Drive Performance Comparison</h2>
+  <table id="sysinfoTable" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>MB</th>
+        <th>AVG Linpack Score</th>
+        <th>Processor Family</th>
+        <th>Processor</th>
+        <th>DIMM Manufacturer</th>
+        <th>DIMM PN</th>
+        <th># DIMMS</th>
+        <th>DIMM Size</th>
+        <th>DIMM Freq.</th>
+        <th>Linpack Theoretical</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for system in systems %}
+      <tr>
+        <td><a href="{% url 'linpack:detail' system.id %}">{{ system.motherboard_model }}</a></td>
+        <td>{{ system.get_linpack_avg_actual_data }}</td>
+        <td>{{ system.get_processor_family }}</td>
+        <td>{{ system.processor_info }}</td>
+        <td>{{ system.get_dimm_manu_data }}</td>
+        <td>{{ system.get_dimm_pn_data }}</td>
+        <td>{{ system.total_dimm_count }}</td>
+        <td>{{ system.get_dimm_memory_size }}</td>
+        <td>{{ system.dimm_clock_speed }}</td>
+        <td>{{ system.linpack_theoretical_score }}</td>
+        <td>{{ system.get_date_modified }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+<div id="performance_bar_chart" style="margin-left: 15%; margin-top: 3%; margin-bottom: 10%;">
+<div id="chart_div" style="width: 1250px; height: 600px;"></div>
+</div>
+<script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawChart);    
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['System', 'Highest', 'Average', 'Lowest'], // include {role: 'tooltip'} for modify popup over bar graph
+        {% for system in systems %}
+          ["{{ system.motherboard_model }}\n{{ system.get_processor_info }}\nDIMM: {{ system.get_dimm_freq }}", parseFloat("{{ system.get_linpack_highest_actual }}"), parseFloat("{{ system.get_linpack_avg_actual }}"), parseFloat("{{ system.get_linpack_lowest_actual }}")],
+        {% endfor %}
+      ]);
+
+      var options = {
+        title: 'System Performance',
+        chartArea: {width: '50%'},
+        hAxis: {
+          title: 'GFLOPS',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'System'
+        },
+        bar: 'horizontal'
+      };
+
+      var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+</script>
+
+<script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'node_modules/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'linpack_bench_app/css/linpack_detail.css' %}">
+
+<script src="{% static 'node_modules/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'node_modules/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'linpack_bench_app/js/linpack_detail.js' %}"></script>
+{% endblock %}
+
+{% block footer %}
+  <a href="{% url 'linpack:index' %}">Menu</a>
+{% endblock %}

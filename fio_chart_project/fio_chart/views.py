@@ -22,6 +22,23 @@ def view_drives(request):
 	return HttpResponse(template.render(context, request))
 
 
+def performance_comparison(request):
+	drive_names = []
+
+	# get form names we want from POST
+	for key in request.POST:
+		if key.startswith("drive_name"):
+			drive_names.append(key)
+
+	drives = []
+	# query DB to get list of drives to compare
+	print (drive_names)
+	for key in drive_names:
+		drives.append(DriveBenchmark.get(pk=request.POST.get(key)))
+	
+	return render(request, 'fio_chart/performance_comparison.html', {'drives': drives})
+
+
 def drive_detail(request, drive_id):
 	# store tuples of each run (read, write) -> then convert to avg
 	avg = {1024: [], 2048: [], 4096: [], 8192: [], 16384: [], 32768: [], \

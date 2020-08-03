@@ -7,6 +7,7 @@ app_name = 'drive_benchmark'
 urlpatterns = [
 	path('drives/', views.view_drives),
 	path('drives/<int:drive_id>/', views.drive_detail, name='drive_detail'),
+	path('drives/performance_comparison/', views.performance_comparison, name='performance_comparison'),
     path('chart_log/', views.upload_fio_log),
 	path('automate_fio_form/', views.automate_fio_test_and_chart),
 	path('upload_performance_data/', views.parse_and_save_performance),
