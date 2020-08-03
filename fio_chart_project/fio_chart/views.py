@@ -34,38 +34,15 @@ def performance_comparison(request):
 	# query DB to get list of drives to compare
 	print (drive_names)
 	for key in drive_names:
-		drives.append(DriveBenchmark.get(pk=request.POST.get(key)))
+		drives.append(DriveBenchmark.objects.get(pk=request.POST.get(key)))
 	
 	return render(request, 'fio_chart/performance_comparison.html', {'drives': drives})
 
 
 def drive_detail(request, drive_id):
-	# store tuples of each run (read, write) -> then convert to avg
-	avg = {1024: [], 2048: [], 4096: [], 8192: [], 16384: [], 32768: [], \
-			65536: [], 131072: [], 262144: [], 524288: [], 1048576: [], 2097152: []}
 	drive = DriveBenchmark.objects.get(id=drive_id)
-
-	for drive_performance in drive.drive_performances.all():
-		for block_performance in drive_performance.block_performances.all():
-			avg[block_performance.block_size].append((block_performance.read_speed, block_performance.write_speed))
-
-	for key in avg:
-		N = len(avg[key])
-		avg_read = 0
-		avg_write = 0
-
-		for read, write in avg[key]:
-			avg_read += read
-			avg_write += write
-
-		avg_read = avg_read // N
-		avg_write = avg_write // N
-
-		avg[key] = (avg_read, avg_write)
-
-
 	template = loader.get_template('fio_chart/drive_detail.html')
-	context = {'drive': drive, 'avg': avg.values()}
+	context = {'drive': drive, 'avg': drive.get_avg.values()}
 
 	return HttpResponse(template.render(context, request))
 

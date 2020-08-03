@@ -13,7 +13,6 @@ class Drive:
 	def __str__(self):
 		return (self.device_name + ": " + str(self.rw_speed))
 
-
 	def add_data(self, block_size, speed):
 		if block_size in self.rw_speed:
 			self.rw_speed[block_size].append(speed)
