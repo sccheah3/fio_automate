@@ -1,0 +1,15 @@
+th, td {
+	text-align: center;
+}
+
+.info_table{
+	margin: 20px 10px 10px 10px;
+}
+
+#drive_read_chart_div{
+    float: left;
+}
+
+#drive_write_chart_div{
+    float: left;
+}

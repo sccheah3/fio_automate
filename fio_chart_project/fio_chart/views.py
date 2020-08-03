@@ -42,7 +42,7 @@ def performance_comparison(request):
 def drive_detail(request, drive_id):
 	drive = DriveBenchmark.objects.get(id=drive_id)
 	template = loader.get_template('fio_chart/drive_detail.html')
-	context = {'drive': drive, 'avg': drive.get_avg.values()}
+	context = {'drive': drive, 'avg': drive.get_avg}
 
 	return HttpResponse(template.render(context, request))
 

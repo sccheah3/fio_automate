@@ -21,6 +21,8 @@ class DriveBenchmark(models.Model):
             for block_performance in drive_performance.block_performances.all():
                 avg[block_performance.block_size].append((block_performance.read_speed, block_performance.write_speed))
 
+        l = []
+
         # store tuples of each run (read, write) -> then convert to avg
         for key in avg:
             N = len(avg[key])
@@ -34,13 +36,16 @@ class DriveBenchmark(models.Model):
             avg_read = avg_read // N
             avg_write = avg_write // N
 
-            avg[key] = (avg_read, avg_write)
+            l.append([avg_read, avg_write])
 
-        return avg
+        return l
 
 class DrivePerformance(models.Model):
     drive = models.ForeignKey(DriveBenchmark, related_name='drive_performances', null=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return ("pk=%s; Date=%s" %(self.pk, self.created))
 
 
 class BlockPerformance(models.Model):

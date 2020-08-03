@@ -24,6 +24,7 @@
 		<thead>
 			<tr>
 				<th>Run</th>
+				<th>ID</th>
 				<th>Operation</th>
 				<th>1K</th>
 				<th>2K</th>
@@ -43,6 +44,7 @@
 		<tbody>
 			<tr>
 				<td>AVG</td>
+				<td>NA</td>
 				<td>Read</td>
 				{% for val in avg %}
 					<td>{{ val.0 }}</td>
@@ -51,6 +53,7 @@
 			</tr>
 			<tr>
 				<td>AVG</td>
+				<td>NA</td>
 				<td>Write</td>
 				{% for val in avg %}
 					<td>{{ val.1 }}</td>
@@ -60,6 +63,7 @@
 			{% for performance in drive.drive_performances.all %}
 			<tr>
 				<td>{{ forloop.counter }}</td>
+				<td>{{ performance.id }}</td>
 				<td>Read</td>
 				{% for block_performance in performance.block_performances.all %}
 					<td>{{ block_performance.read_speed }}</td>
@@ -68,6 +72,7 @@
 			</tr>
 			<tr>
 				<td> {{ forloop.counter }}</td>
+				<td>{{ performance.id }}</td>
 				<td>Write</td>
 				{% for block_performance in performance.block_performances.all %}
 					<td>{{ block_performance.write_speed }}</td>
