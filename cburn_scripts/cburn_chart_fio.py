@@ -31,6 +31,13 @@ for device in nvme_info['Devices']:
 	disk_dict[device['DevicePath']] = {'part_number': device['ModelNumber'], 'firmware_version': device['Firmware']}
 
 
+# save disk info into separate file. can refactor this into a separate pkg
+f = open("/root/disk_info.txt", "w+")
+for device in disk_dict.keys():
+	f.write("%s,%s,%s\n" % (device, disk_dict[device]['part_number'], disk_dict[device]['firmware_version']))
+f.close()
+
+
 class Drive:
 	def __init__(self, device_name=""):
 		# self.disk_name = ""

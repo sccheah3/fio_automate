@@ -50,14 +50,16 @@ fio /root/fio_jobfile/rand.fio --output=/root/fio_results/rand.log
 
 
 # copy the logs to DIR
-echo "Copying log files to ${SYS_DIR}" > /dev/tty0
+echo "Copying log files to ${SYS_DIR}..." > /dev/tty0
 cp -r /root/fio_results/ ${SYS_DIR}
 
 echo "Charting the results..." > /dev/tty0
 python3 /root/cburn_chart_fio.py /root/fio_results/seq.log /root/drive_chart_performance.xlsx
-echo "Copying chart xlsx file to ${SYS_DIR}" > /dev/tty0
+echo "Copying chart xlsx file to ${SYS_DIR}..." > /dev/tty0
 cp -r /root/drive_chart_performance.xlsx ${SYS_DIR}
 
+echo "Uploading results to server..."
+curl -X POST -F 'drive_info_file=@/root/disk_info.txt' -F 'fio_log_file=@/root/fio_results/seq.log' "http://${HOSTSERV}/drive_benchmark/upload_performance_data/"
 
 
 return 0

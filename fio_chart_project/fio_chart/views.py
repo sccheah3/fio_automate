@@ -2,8 +2,11 @@ from rest_framework import viewsets
 
 from django.http import HttpResponse
 from django.shortcuts import render
-from .forms import UploadFioLogForm, AutomateFioForm
+from django.template import loader
+from .forms import UploadFioLogForm, AutomateFioForm, SavePerformanceForm
+from .models import DriveBenchmark, DrivePerformance, BlockPerformance
 from . import chart_fio
+from . import utilities
 
 import io
 import subprocess
@@ -11,7 +14,46 @@ import time
 
 RC_URL = '172.16.118.50/fio_automate_staging.sh'
 
+def view_drives(request):
+	drives = DriveBenchmark.objects.all()
+	template = loader.get_template('fio_chart/drives.html')
+	context = {'drives': drives}
 
+	return HttpResponse(template.render(context, request))
+
+
+def drive_detail(request, drive_id):
+	# store tuples of each run (read, write) -> then convert to avg
+	avg = {1024: [], 2048: [], 4096: [], 8192: [], 16384: [], 32768: [], \
+			65536: [], 131072: [], 262144: [], 524288: [], 1048576: [], 2097152: []}
+	drive = DriveBenchmark.objects.get(id=drive_id)
+
+	for drive_performance in drive.drive_performances.all():
+		for block_performance in drive_performance.block_performances.all():
+			avg[block_performance.block_size].append((block_performance.read_speed, block_performance.write_speed))
+
+	for key in avg:
+		N = len(avg[key])
+		avg_read = 0
+		avg_write = 0
+
+		for read, write in avg[key]:
+			avg_read += read
+			avg_write += write
+
+		avg_read = avg_read // N
+		avg_write = avg_write // N
+
+		avg[key] = (avg_read, avg_write)
+
+
+	template = loader.get_template('fio_chart/drive_detail.html')
+	context = {'drive': drive, 'avg': avg.values()}
+
+	return HttpResponse(template.render(context, request))
+
+
+# handles fio log file upload. charts/graphs and client downloads xlsx file
 def upload_fio_log(request):
 	if request.method == 'POST':
 		form = UploadFioLog(request.POST, request.FILES)
@@ -27,9 +69,26 @@ def upload_fio_log(request):
 		form = UploadFioLogForm()
 	return render(request, 'fio_chart/upload.html', {'form': form})
 
-# def parse_and_save_performance(request):
-#	if request.method == 'POST'
+# deals with cburn automation for saving disk data and bench performance
+# for database
+def parse_and_save_performance(request):
+	if request.method == 'POST':
+		form = SavePerformanceForm(request.POST, request.FILES)
+		if form.is_valid():
+			fio_log_file = request.FILES['fio_log_file']
+			drive_info_file = request.FILES['drive_info_file']
 
+			utilities.parse_and_save(drive_info_file, fio_log_file)
+
+			return HttpResponse("Submitted. Check the logs.")
+	else:
+		form = SavePerformanceForm()
+
+	return render(request, 'fio_chart/upload_performance_data.html', {'form': form})
+
+
+
+# handles form for system info and commands to begin automation test
 def automate_fio_test_and_chart(request):
 	if request.method == 'POST':
 		form = AutomateFioForm(request.POST)
@@ -56,10 +115,3 @@ def reset_server(bmc_ip, bmc_username, bmc_password):
 	time.sleep(10)
 	subprocess.Popen(['ipmitool', '-U', bmc_username, '-P', bmc_password, '-H', bmc_ip, 'power', 'on'])
 
-#class DriveViewSet(viewsets.ModelViewSet):
-#    queryset = DriveBenchmark.objects.all()
-#    serializer_class = DriveSerializer
-
-#class PerformanceViewSet(viewsets.ModelViewSet):
-#    queryset = Performance.objects.all()
-#    serializer_class = PerformanceSerializer
