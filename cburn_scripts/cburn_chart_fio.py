@@ -86,7 +86,7 @@ def chart(text, output_filename="drive_performance.xlsx"):
 	drives = {}
 
 	# ('1M', 'nvme0n1', '3231MB/s') - will have a tuple of these
-	match = re.findall(r'seq_read_([\d]+.)_(.*): \(.*\n.*\(([\d]+[\w]+/\w)\)', text)
+	match = re.findall(r'seq_read_([\d]+.)_(.*): \(.*\n.*\(([\d\.]+[\w]+/\w)\)', text)
 	for data in match:
 		if data[1] in drives:
 			drive = drives[data[1]]
@@ -97,7 +97,7 @@ def chart(text, output_filename="drive_performance.xlsx"):
 			drives[data[1]] = drive
 
 
-	match = re.findall(r'seq_write_([\d]+.)_(.*): \(.*\n.*\(([\d]+[\w]+/\w)\)', text)
+	match = re.findall(r'seq_write_([\d]+.)_(.*): \(.*\n.*\(([\d\.]+[\w]+/\w)\)', text)
 	for data in match:
 		if data[1] in drives:
 			drive = drives[data[1]]

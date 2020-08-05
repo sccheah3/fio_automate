@@ -50,7 +50,7 @@ def chart(text, output_filename="drive_performance.xlsx"):
 	drives = {}
 
 	# ('1M', 'nvme0n1', '3231MB/s') - will have a tuple of these
-	match = re.findall(r'seq_read_([\d]+.)_(.*): \(.*\n.*\(([\d]+[\w]+/\w)\)', text)
+	match = re.findall(r'seq_read_([\d]+.)_(.*): \(.*\n.*\(([\d\.]+[\w]+/\w)\)', text)
 	for data in match:
 		if data[1] in drives:
 			drive = drives[data[1]]
@@ -61,7 +61,7 @@ def chart(text, output_filename="drive_performance.xlsx"):
 			drives[data[1]] = drive
 
 
-	match = re.findall(r'seq_write_([\d]+.)_(.*): \(.*\n.*\(([\d]+[\w]+/\w)\)', text)
+	match = re.findall(r'seq_write_([\d]+.)_(.*): \(.*\n.*\(([\d\.]+[\w]+/\w)\)', text)
 	for data in match:
 		if data[1] in drives:
 			drive = drives[data[1]]
@@ -103,7 +103,6 @@ def chart(text, output_filename="drive_performance.xlsx"):
 		row_line_chart = row
 
 		for block_size in sorted(drive.rw_speed.keys()):
-
 			worksheet.write(row, col, normalize(block_size))
 			worksheet.write(row, col + 1, (drive.rw_speed[block_size][0]) / pow(1024, 2))
 			worksheet.write(row, col + 2, (drive.rw_speed[block_size][1]) / pow(1024, 2))
