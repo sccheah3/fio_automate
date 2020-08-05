@@ -12,7 +12,9 @@
 <p><strong>Convert Logs:</strong> This is where you can upload your raw fio result file and you will automatically download
       an excel sheet of your results charted and graphed. This will not save your results to the database, as raw fio results
       do not contain any useful information about the disk.</p>
-<p><strong>Automate FIO:</strong> Just enter in your BMC ip, BMC user/pass, LAN mac, cburn img (ex: cburn-r77) you want to use, and what burnin directory you want to save it to, just like autopxe.</p>
+<p><strong>Automate FIO:</strong> Just enter in your BMC ip, BMC user/pass, LAN mac, cburn img (ex: cburn-r77) you want to use,
+        and what burnin directory you want to save it to, just like autopxe. This will reboot your system and set the boot device to pxe.
+        An autopxe command will be set once you submit the information.</p>
 <p><strong>Upload Logs:</strong> If you happen to do a manual run of fio and want to upload the logs to the database, you need two things: your fio result logs and a file that specifies
           your drive device slot, drive part number, and your drive firmware version. Keep in mind that it is case-sensitive.<br>
           <i>Example: /dev/nvme0n1,Micron_9300_MTFDHAL7T6TDP,11300DN0</i><br>

@@ -105,7 +105,9 @@ def set_autopxe(lan_mac, cburn_img, burnin_dir):
 
 # dont want to do reset because when system is initial off state, will not turn on
 def reset_server(bmc_ip, bmc_username, bmc_password):
+	subprocess.Popen(['ipmitool', '-U', bmc_username, '-P', bmc_password, '-H', bmc_ip, 'chassis', 'bootdev', 'pxe'])
+	time.sleep(1)
 	subprocess.Popen(['ipmitool', '-U', bmc_username, '-P', bmc_password, '-H', bmc_ip, 'power', 'off'])
-	time.sleep(10)
+	time.sleep(30)
 	subprocess.Popen(['ipmitool', '-U', bmc_username, '-P', bmc_password, '-H', bmc_ip, 'power', 'on'])
 
