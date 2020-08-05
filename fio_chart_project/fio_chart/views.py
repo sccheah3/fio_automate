@@ -50,7 +50,7 @@ def drive_detail(request, drive_id):
 # handles fio log file upload. charts/graphs and client downloads xlsx file
 def upload_fio_log(request):
 	if request.method == 'POST':
-		form = UploadFioLog(request.POST, request.FILES)
+		form = UploadFioLogForm(request.POST, request.FILES)
 		if form.is_valid():
 			output = io.BytesIO()
 			chart_fio.chart(request.FILES['file'].read().decode(), output)
