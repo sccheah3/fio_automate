@@ -1,7 +1,7 @@
 #! /bin/bash
 
 HOSTSERV_STATIC_FILES="172.16.193.164/disk_benchmark"
-HOSTSERV="172.16.193.164:8000/"
+HOSTSERV="172.16.193.164:8000"
 
 source /root/stage2.conf
 
