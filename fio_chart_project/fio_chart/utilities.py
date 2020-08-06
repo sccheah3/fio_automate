@@ -101,7 +101,7 @@ def parse_and_save(drive_info, fio_log):
 		drive.pn, drive.fw = dev_dict[key]
 
 		drive_bench, created = DriveBenchmark.objects.get_or_create(drive_pn=drive.pn, drive_fw=drive.fw)
-		if created:
+		if not drive_bench:
 			drive_bench = created
 
 		drive_bench.modified = timezone.now()
