@@ -2,6 +2,9 @@
 
 {% block content %}
 <h2>Upload File</h2>
+<p>This is where you can upload your raw fio result file and you will automatically download
+      an excel sheet of your results charted and graphed. This will not save your results to the database, as raw fio results
+      do not contain any useful information about the disk.</p>
 <form enctype="multipart/form-data" method="post">
   {% csrf_token %}
   {{ form.as_p }}

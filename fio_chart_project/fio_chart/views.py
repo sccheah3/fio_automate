@@ -12,7 +12,7 @@ import io
 import subprocess
 import time
 
-RC_URL = '172.16.118.50/fio_automate_staging.sh'
+RC_URL = '172.16.193.164/disk_benchmark/fio_automate_staging.sh'
 
 def view_drives(request):
 	drives = DriveBenchmark.objects.all()
@@ -79,7 +79,6 @@ def parse_and_save_performance(request):
 		form = SavePerformanceForm()
 
 	return render(request, 'fio_chart/upload_performance_data.html', {'form': form})
-
 
 
 # handles form for system info and commands to begin automation test

@@ -2,6 +2,9 @@
 
 {% block content %}
 <h2>Enter Data</h2>
+<p>Just enter in your BMC ip, BMC user/pass, LAN mac, cburn img (ex: cburn-r77) you want to use,
+        and what burnin directory you want to save it to, just like autopxe. This will reboot your system and set the boot device to pxe.
+        An autopxe command will be set once you submit the information.</p>
 <form enctype="multipart/form-data" method="post">
   {% csrf_token %}
   {{ form.as_p }}

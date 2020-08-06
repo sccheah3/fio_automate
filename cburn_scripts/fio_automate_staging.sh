@@ -1,6 +1,6 @@
 #! /bin/bash
 
-HOSTSERV="172.16.118.50"
+HOSTSERV="172.16.193.164/disk_benchmark"
 
 source /root/stage2.conf
 

@@ -2,6 +2,10 @@
 
 {% block content %}
 <h2>Upload File</h2>
+<p><strong>Upload Logs:</strong> If you happen to do a manual run of fio and want to upload the logs to the database, you need two things: your fio result logs and a file that specifies
+          your drive device slot, drive part number, and your drive firmware version. Keep in mind that it is case-sensitive.<br>
+          <i>Example: /dev/nvme0n1,Micron_9300_MTFDHAL7T6TDP,11300DN0</i><br>
+          Each drive will be on a newline. The data for nvmes are gathered via <i>nvme</i> command. For sata/sas, it is through the <i>smartctl</i> command.</p>
 <form enctype="multipart/form-data" method="post">
   {% csrf_token %}
   {{ form.as_p }}
