@@ -1,6 +1,7 @@
 #! /bin/bash
 
-HOSTSERV="172.16.193.164/disk_benchmark"
+HOSTSERV_STATIC_FILES="172.16.193.164/disk_benchmark"
+HOSTSERV="172.16.193.164:8000/"
 
 source /root/stage2.conf
 
@@ -10,20 +11,20 @@ yum install -y python3
 pip3 install xlsxwriter
 
 
-wget "http://${HOSTSERV}/create_fio_jobfile.py" -O /root/create_fio_jobfile.py &> /dev/null
+wget "http://${HOSTSERV_STATIC_FILES}/create_fio_jobfile.py" -O /root/create_fio_jobfile.py &> /dev/null
 if [ $? -ne 0 ]; then
 	echo "Error acquiring fio job building tool" | tee -a /dev/tty0 ${SYS_DIR}/fio_status.log
 	return 1
 fi
 
-wget "http://${HOSTSERV}/cburn_chart_fio.py" -O /root/cburn_chart_fio.py &> /dev/null
+wget "http://${HOSTSERV_STATIC_FILES}/cburn_chart_fio.py" -O /root/cburn_chart_fio.py &> /dev/null
 if [ $? -ne 0 ]; then
 	echo "Error acquiring fio charting tool" | tee -a /dev/tty0 ${SYS_DIR}/fio_status.log
 	return 2
 fi
 
 # get drive arrays
-diskname_sd=$( ls /dev/ | grep -iE sd.+ )
+diskname_sd=$( ls /dev/ | grep -iE sd[a-zA-Z]+$ )
 diskname_nvme=$( ls /dev/ | grep -iE nvme.+n1$ )
 
 DRIVES=()
@@ -58,8 +59,8 @@ python3 /root/cburn_chart_fio.py /root/fio_results/seq.log /root/drive_chart_per
 echo "Copying chart xlsx file to ${SYS_DIR}..." > /dev/tty0
 cp -r /root/drive_chart_performance.xlsx ${SYS_DIR}
 
-echo "Uploading results to server..."
-curl -X POST -F 'drive_info_file=@/root/disk_info.txt' -F 'fio_log_file=@/root/fio_results/seq.log' "http://${HOSTSERV}/drive_benchmark/upload_performance_data/"
+echo "Uploading results to server..." > /dev/tty0
+curl -X POST -F 'drive_info_file=@/root/disk_info.txt' -F 'fio_log_file=@/root/fio_results/seq.log' "http://${HOSTSERV}/drive_benchmark/upload_performance_data/" > /dev/tty0
 
 
 return 0
