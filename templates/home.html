@@ -3,7 +3,6 @@
 {% block title %}Disk Benchmark Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
 <h2>Disk Benchmark Homepage</h2>
 <p>Any issues, contact <i>stanleycheah@supermicro.com</i>.</p>
 <p><strong>Drives:</strong> Displays all drives ever tested and uploaded. You can search and filter fields here to
@@ -19,5 +18,4 @@
           your drive device slot, drive part number, and your drive firmware version. Keep in mind that it is case-sensitive.<br>
           <i>Example: /dev/nvme0n1,Micron_9300_MTFDHAL7T6TDP,11300DN0</i><br>
           Each drive will be on a newline. The data for nvmes are gathered via <i>nvme</i> command. For sata/sas, it is through the <i>smartctl</i> command.</p>
-{% endif %}
 {% endblock %}
