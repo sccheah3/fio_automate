@@ -71,7 +71,7 @@ with open(SEQ_JOBFILE, 'w+') as s_jobfile:
 		for bs in BLOCK_SIZES:
 			s_jobfile.write("[seq_write_%s_%s]\n" %(bs, dev_name))
 			s_jobfile.write("stonewall\n")
-			s_jobfile.write("rw=read\n")
+			s_jobfile.write("rw=write\n")
 			s_jobfile.write("ramp_time=%s\n" %(str(get_ramptime(dev_name))))
 			s_jobfile.write("bs=%s\n" %(bs))
 			s_jobfile.write("filename=%s\n" %(dev_full_name))
